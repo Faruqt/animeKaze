@@ -24,32 +24,33 @@ def refresh_expiring_jwts(response):
 
 @api.route('/createuser', methods=['POST'])
 def create_user():
-	data = request.get_json() or {}
-	if data['first_name'] == '' or data['last_name'] == '' or data['username'] == '' or data['email'] == '' or data['password'] == '':
-		return bad_request('Please make sure all fields are filled in correctly')
-	if User.query.filter_by(email=data['email'].lower()).first():
-		return bad_request('email address already registered')
-	if User.query.filter_by(username=data['username'].lower()).first():
-		return bad_request('username already exists')
-	user = User()
-	user.from_dict(data, new_user=True)
-	db.session.add(user)
-	db.session.commit()
-	response = user.to_dict()
-	status_code = 201
-	return response, status_code
+    data = request.get_json() or {}
+    if data['username'] == '' or data['email'] == '' or data['password'] == '':
+        return bad_request('Please make sure all fields are filled in correctly')
+    if User.query.filter_by(email=data['email'].lower()).first():
+        return bad_request('email address already registered')
+    if User.query.filter_by(username=data['username'].lower()).first():
+        return bad_request('username already exists')
+    user = User()
+    user.from_dict(data, new_user=True)
+    db.session.add(user)
+    db.session.commit()
+    response = user.to_dict()
+    status_code = 201
+    return response, status_code
 
 @api.route("/token", methods=["POST"])
 def create_token():
-    email = request.json.get("email", None).lower()
-    password = request.json.get("password", None)
+    email = request.json.get("email").lower()
+    password = request.json.get("password")
     user = User.query.filter_by(email=email).first()
     if user is not None and user.check_password(password):
-        print(user.check_password(password))
         access_token = create_access_token(identity=email)
         response = {"access_token":access_token,
 					"userID":user.id,
-					"userName":user.username}
+					"userName":user.username,
+                    "avatar":user.avatar
+                    }
         return response
     else:
         return {"msg": "Wrong email or password"}, 401

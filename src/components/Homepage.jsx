@@ -1,27 +1,21 @@
 import React, {useState, useEffect, useContext} from "react";
 import axios from "axios";
 import { UserContext } from './contexts/userContext';
-import Search from "./Search"
-import Posts from "./Posts"
+import CreatePost from "./posts/createPost"
+import Posts from "./posts/Posts"
 
 function Home(){
 
 	// const [postMessage, setpostMessage] = useState("")
     const [posts, setPosts] = useState("")
-	const [content, setContent] = useState("")
-    const {token, removeToken, setAppState}= useContext(UserContext)
+    const {token, removeToken}= useContext(UserContext)
 	const username = window.localStorage.getItem('username')
-	const userId = JSON.parse(window.localStorage.getItem("cuid"))
 
     useEffect(() => {
 		// setAppState({ loading: true });
         getPosts()
     },[])
 
-	function handleChange(event) { 
-		const post = event.target.value
-		setContent(post)
-	}
 
     function getPosts(){
 		axios({
@@ -34,6 +28,7 @@ function Home(){
 			setPosts(
                 response.data.items
 			  )
+			console.log(response.data.items)
 			// setAppState({ loading: false });
 		  }).catch((error) => {
 			if (error.response) {
@@ -45,30 +40,6 @@ function Home(){
 			  console.log(error.response.headers);
 			  }
 		  })}
-
-	function submitForm (event){
-		const formData = new FormData(event.target)
-		axios({
-			method: "POST",
-			url: '/api/upload',
-			data:formData,
-			headers: {
-						Authorization: 'Bearer ' + token
-			  		}
-			}).then((response)=>{
-				getPosts() // get posts upon successful post submission
-			}).catch((error) => {
-				if (error.response) {
-				  console.log(error.response)
-				  if (error.response.status === 401){
-					removeToken()
-					}
-				  }
-			  	})
-		setContent("")
-		event.target.reset()
-		event.preventDefault()
-	}
 
 	function handlePost(id) { 
 		axios({
@@ -93,6 +64,55 @@ function Home(){
 		})
 	}
 
+	function notInterested(id) { 
+		axios({
+		  method: "POST",
+		  url:"/api/notinterested/" + id,
+		  data:{
+			username:username
+		   },
+		  headers: {
+			Authorization: 'Bearer ' + token
+		  }
+		})
+		.then((response) => {
+		  console.log(response.data.success)
+		}).catch((error) => {
+		  if (error.response) {
+			console.log(error.response)
+			if (error.response.status === 401 || error.response.status === 422){
+			  removeToken()
+			}
+			}
+		})
+	  }
+
+	  function unfollowUser(uzer) {
+		console.log(uzer)
+        axios({
+          method: "POST",
+          url:"/api/unfollow/" + uzer,
+          data:{
+            username:username
+           },
+          headers: {
+            Authorization: 'Bearer ' + token
+          }
+        })
+        .then((response) => {
+			getPosts()
+        }).catch((error) => {
+          if (error.response) {
+            console.log(error.response)
+            console.log(error.response.status)
+            console.log(error.response.headers)
+            if (error.response.status === 401 || error.response.status === 422){
+              removeToken()
+            }
+            }
+        })  
+    }
+
 	  function reportPost(id) { 
 		axios({
 		  method: "POST",
@@ -115,25 +135,20 @@ function Home(){
 		})
 	  }
 
-		
     return (
-        <>
-			<div className="note">
-                <h1 >  Welcome to AnimeKaze </h1>
-            </div>
-            <Search />
-			<form onSubmit={submitForm} encType="multipart/form-data" className="create-note">
-				<input  type="text" onChange={handleChange} name="content" placeholder="What's happening?" value={content} required/>
-				<input type="file" id="image" name="file" accept="image/*" className="file-custom" required/>
-				<input  name="uid" value={userId} hidden readOnly={true}/>
-				<button
-					className="btn btn-lg btn-primary pull-xs-right"
-					type="submit">
-					Post
-				</button>
-			</form>
-			{posts && posts.map(posts => <Posts key={posts.id} id={posts.id} content={posts.content} likeCount={posts.likes} image={posts.image} like={handlePost} interested={null} report={reportPost}/>)}
-        </>
+		<div className="home">
+			<div className="top-title">
+				Feed
+			</div>
+			<div className="home-page">
+				<CreatePost post={getPosts}/>
+				{posts.length > 0 ? posts.map(posts => <Posts key={posts.id} id={posts.id} content={posts.content} likeCount={posts.likes} 
+													image={posts.image} like={handlePost} interested={null} reload={getPosts}
+													report={reportPost} userLiked={posts.user_liked} avatar={posts.avatar} 
+													poster={posts.poster} fname={posts.fname} lname={posts.lname} unfollow={unfollowUser}/>)
+					: <div className="no-post"> No post yet </div>}
+			</div>
+        </div>
     )
 }
 
