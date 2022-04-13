@@ -3,7 +3,7 @@
 Building a great community for all anime lovers
 
 ## Backend
-Step1: Enter the backend directory and create and activate your environment:
+Step1: Enter the backend directory using ```cd backend``` and create and activate your environment:
 
 - For mac/unix users: 
 
@@ -27,7 +27,7 @@ Step3: Run migrations to make the database up to date
   - and finally `flask db upgrade`
 
 ## Frontend
-- Return to the base directory and run: `npm install` before running the scripts below.
+- Return to the base directory  using ```cd ..``` and run: `npm install` before running the scripts below.
 
 ## Running the application with the available scripts
 - Step 1: run `npm run start-backend` to start the flask backend server.
