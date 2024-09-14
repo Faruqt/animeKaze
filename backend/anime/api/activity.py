@@ -485,7 +485,7 @@ def likeChildComment(id):
 @jwt_required()
 def notify():
 	#set time action was made 
-	action_time = datetime.utcnow() 
+	# action_time = datetime.utcnow() 
 	
 	# Get current user
 	uzer = request.json.get("username").lower()

@@ -234,7 +234,8 @@ class User(PaginatedAPIMixin, db.Model, UserMixin):
         try:
             id = jwt.decode(token, app.config['SECRET_KEY'],
                             algorithms=['HS256'])['reset_password']
-        except:
+        except Exception as e:
+            print(e)
             return
         return User.query.get(id)
 
