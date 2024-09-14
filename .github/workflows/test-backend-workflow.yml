@@ -25,10 +25,8 @@ jobs:
           echo "Ruff Installed"
       - name: Apply Ruff Linter
         run: |
-          ruff check .
-          echo "Ruff Check Applied"
-          ruff fix .
-          echo "Ruff Fix Applied" 
+          ruff check --fix --exit-non-zero-on-fix --show-fixes
+          echo "Ruff Check and Fix Applied" 
           ruff format .
           echo "File formatting applied"
       - name: Commit formatted changes
