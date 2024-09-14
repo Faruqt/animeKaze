@@ -7,7 +7,7 @@ from anime.models import User, Post, Comment, ChildComment
 # Test User model
 class UserModelCase(unittest.TestCase):
     def setUp(self):
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://"
         db.create_all()
 
     def tearDown(self):
@@ -15,14 +15,14 @@ class UserModelCase(unittest.TestCase):
         db.drop_all()
 
     def test_password_hashing(self):
-        u = User(username='Luffy')
-        u.set_password('pirate')
-        self.assertFalse(u.check_password('piracy'))
-        self.assertTrue(u.check_password('pirate'))
+        u = User(username="Luffy")
+        u.set_password("pirate")
+        self.assertFalse(u.check_password("piracy"))
+        self.assertTrue(u.check_password("pirate"))
 
     def test_follow(self):
-        u1 = User(username='johndoe', email='johndoe@example.com')
-        u2 = User(username='goldroger', email='goldroger@example.com')
+        u1 = User(username="johndoe", email="johndoe@example.com")
+        u2 = User(username="goldroger", email="goldroger@example.com")
         db.session.add(u1)
         db.session.add(u2)
         db.session.commit()
@@ -33,9 +33,9 @@ class UserModelCase(unittest.TestCase):
         db.session.commit()
         self.assertTrue(u1.is_following(u2))
         self.assertEqual(u1.followed.count(), 1)
-        self.assertEqual(u1.followed.first().username, 'goldroger')
+        self.assertEqual(u1.followed.first().username, "goldroger")
         self.assertEqual(u2.followers.count(), 1)
-        self.assertEqual(u2.followers.first().username, 'johndoe')
+        self.assertEqual(u2.followers.first().username, "johndoe")
 
         u1.unfollow(u2)
         db.session.commit()
@@ -45,25 +45,39 @@ class UserModelCase(unittest.TestCase):
 
     def test_follow_posts(self):
         # create four users
-        u1 = User(username='luffy', email='luffy@example.com')
-        u2 = User(username='sabo', email='sabo@example.com')
-        u3 = User(username='ace', email='ace@example.com')
-        u4 = User(username='zoro', email='zoro@example.com')
+        u1 = User(username="luffy", email="luffy@example.com")
+        u2 = User(username="sabo", email="sabo@example.com")
+        u3 = User(username="ace", email="ace@example.com")
+        u4 = User(username="zoro", email="zoro@example.com")
         db.session.add_all([u1, u2, u3, u4])
 
         # create four posts
         now = datetime.utcnow()
-        p1 = Post(content="luffy the pirate king", author=u1,
-                  timestamp=now + timedelta(seconds=1))
-        p2 = Post(content="Sabo finally consumes the flare flare fruit ",
-                  author=u2,
-                  timestamp=now + timedelta(seconds=4))
-        p3 = Post(content="Akainu must pay for killing ace :(",  author=u3,
-                  timestamp=now + timedelta(seconds=3))
-        p4 = Post(content="Zoro has gotten lost again. haha!!", author=u4,
-                  timestamp=now + timedelta(seconds=2))
-        p5 = Post(content="Usopp is the pirate kings's sniper!!", author=u4,
-                  timestamp=now + timedelta(seconds=1))
+        p1 = Post(
+            content="luffy the pirate king",
+            author=u1,
+            timestamp=now + timedelta(seconds=1),
+        )
+        p2 = Post(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u2,
+            timestamp=now + timedelta(seconds=4),
+        )
+        p3 = Post(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            timestamp=now + timedelta(seconds=3),
+        )
+        p4 = Post(
+            content="Zoro has gotten lost again. haha!!",
+            author=u4,
+            timestamp=now + timedelta(seconds=2),
+        )
+        p5 = Post(
+            content="Usopp is the pirate kings's sniper!!",
+            author=u4,
+            timestamp=now + timedelta(seconds=1),
+        )
 
         db.session.add_all([p1, p2, p3, p4, p5])
         db.session.commit()
@@ -93,25 +107,39 @@ class UserModelCase(unittest.TestCase):
 
     def test_reported_posts(self):
         # create four users
-        u1 = User(username='luffy', email='luffy@example.com')
-        u2 = User(username='sabo', email='sabo@example.com')
-        u3 = User(username='ace', email='ace@example.com')
-        u4 = User(username='zoro', email='zoro@example.com')
+        u1 = User(username="luffy", email="luffy@example.com")
+        u2 = User(username="sabo", email="sabo@example.com")
+        u3 = User(username="ace", email="ace@example.com")
+        u4 = User(username="zoro", email="zoro@example.com")
         db.session.add_all([u1, u2, u3, u4])
 
         # create four posts
         now = datetime.utcnow()
-        p1 = Post(content="luffy the pirate king", author=u1,
-                  timestamp=now + timedelta(seconds=1))
-        p2 = Post(content="Sabo finally consumes the flare flare fruit ",
-                  author=u2,
-                  timestamp=now + timedelta(seconds=4))
-        p3 = Post(content="Akainu must pay for killing ace :(",  author=u3,
-                  timestamp=now + timedelta(seconds=3))
-        p4 = Post(content="Zoro has gotten lost again. haha!!", author=u4,
-                  timestamp=now + timedelta(seconds=2))
-        p5 = Post(content="Usopp is the pirate kings's sniper!!", author=u4,
-                  timestamp=now + timedelta(seconds=1))
+        p1 = Post(
+            content="luffy the pirate king",
+            author=u1,
+            timestamp=now + timedelta(seconds=1),
+        )
+        p2 = Post(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u2,
+            timestamp=now + timedelta(seconds=4),
+        )
+        p3 = Post(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            timestamp=now + timedelta(seconds=3),
+        )
+        p4 = Post(
+            content="Zoro has gotten lost again. haha!!",
+            author=u4,
+            timestamp=now + timedelta(seconds=2),
+        )
+        p5 = Post(
+            content="Usopp is the pirate kings's sniper!!",
+            author=u4,
+            timestamp=now + timedelta(seconds=1),
+        )
 
         db.session.add_all([p1, p2, p3, p4, p5])
         db.session.commit()
@@ -143,7 +171,7 @@ class UserModelCase(unittest.TestCase):
         f3 = u3.followed_posts().all()
         f4 = u4.followed_posts().all()
 
-        # check for posts by timestamp descending order excluding the reported posts 
+        # check for posts by timestamp descending order excluding the reported posts
         self.assertEqual(f1, [p2, p1, p5])
         # luffy can see his own post and that of sabo and zoro minus post 4 that he reported
         self.assertEqual(f2, [p2, p3])
@@ -155,25 +183,39 @@ class UserModelCase(unittest.TestCase):
 
     def test_not_interested_in_posts(self):
         # create four users
-        u1 = User(username='luffy', email='luffy@example.com')
-        u2 = User(username='sabo', email='sabo@example.com')
-        u3 = User(username='ace', email='ace@example.com')
-        u4 = User(username='zoro', email='zoro@example.com')
+        u1 = User(username="luffy", email="luffy@example.com")
+        u2 = User(username="sabo", email="sabo@example.com")
+        u3 = User(username="ace", email="ace@example.com")
+        u4 = User(username="zoro", email="zoro@example.com")
         db.session.add_all([u1, u2, u3, u4])
 
         # create four posts
         now = datetime.utcnow()
-        p1 = Post(content="luffy the pirate king", author=u1,
-                  timestamp=now + timedelta(seconds=1))
-        p2 = Post(content="Sabo finally consumes the flare flare fruit ",
-                  author=u2,
-                  timestamp=now + timedelta(seconds=4))
-        p3 = Post(content="Akainu must pay for killing ace :(",  author=u3,
-                  timestamp=now + timedelta(seconds=3))
-        p4 = Post(content="Zoro has gotten lost again. haha!!", author=u4,
-                  timestamp=now + timedelta(seconds=2))
-        p5 = Post(content="Usopp is the pirate kings's sniper!!", author=u4,
-                  timestamp=now + timedelta(seconds=1))
+        p1 = Post(
+            content="luffy the pirate king",
+            author=u1,
+            timestamp=now + timedelta(seconds=1),
+        )
+        p2 = Post(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u2,
+            timestamp=now + timedelta(seconds=4),
+        )
+        p3 = Post(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            timestamp=now + timedelta(seconds=3),
+        )
+        p4 = Post(
+            content="Zoro has gotten lost again. haha!!",
+            author=u4,
+            timestamp=now + timedelta(seconds=2),
+        )
+        p5 = Post(
+            content="Usopp is the pirate kings's sniper!!",
+            author=u4,
+            timestamp=now + timedelta(seconds=1),
+        )
 
         db.session.add_all([p1, p2, p3, p4, p5])
         db.session.commit()
@@ -209,7 +251,7 @@ class UserModelCase(unittest.TestCase):
 # Test Post model
 class PostModelCase(unittest.TestCase):
     def setUp(self):
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://"
         db.create_all()
 
     def tearDown(self):
@@ -218,23 +260,38 @@ class PostModelCase(unittest.TestCase):
 
     def test_report_posts(self):
         # create two users
-        u1 = User(username='luffy', first_name='Monkey', last_name='D.luffy',
-                  email='luffy@example.com')
-        u2 = User(username='sabo', email='sabo@example.com')
-        u3 = User(username='ace', email='ace@example.com')
+        u1 = User(
+            username="luffy",
+            first_name="Monkey",
+            last_name="D.luffy",
+            email="luffy@example.com",
+        )
+        u2 = User(username="sabo", email="sabo@example.com")
+        u3 = User(username="ace", email="ace@example.com")
         db.session.add_all([u1, u2, u3])
 
         # create four posts
         now = datetime.utcnow()
-        p1 = Post(content="luffy the pirate king", author=u1,
-                  timestamp=now + timedelta(seconds=1))
-        p2 = Post(content="Sabo finally consumes the flare flare fruit ",
-                  author=u1,
-                  timestamp=now + timedelta(seconds=4))
-        p3 = Post(content="Akainu must pay for killing ace :(",  author=u3,
-                  timestamp=now + timedelta(seconds=3))
-        p4 = Post(content="Zoro has gotten lost again. haha!!", author=u2,
-                  timestamp=now + timedelta(seconds=2))
+        p1 = Post(
+            content="luffy the pirate king",
+            author=u1,
+            timestamp=now + timedelta(seconds=1),
+        )
+        p2 = Post(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u1,
+            timestamp=now + timedelta(seconds=4),
+        )
+        p3 = Post(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            timestamp=now + timedelta(seconds=3),
+        )
+        p4 = Post(
+            content="Zoro has gotten lost again. haha!!",
+            author=u2,
+            timestamp=now + timedelta(seconds=2),
+        )
 
         db.session.add_all([p1, p2, p3, p4])
         db.session.commit()
@@ -269,23 +326,38 @@ class PostModelCase(unittest.TestCase):
 
     def test_interest_posts(self):
         # create two users
-        u1 = User(username='luffy', first_name='Monkey', last_name='D.luffy',
-                  email='luffy@example.com')
-        u2 = User(username='sabo', email='sabo@example.com')
-        u3 = User(username='ace', email='ace@example.com')
+        u1 = User(
+            username="luffy",
+            first_name="Monkey",
+            last_name="D.luffy",
+            email="luffy@example.com",
+        )
+        u2 = User(username="sabo", email="sabo@example.com")
+        u3 = User(username="ace", email="ace@example.com")
         db.session.add_all([u1, u2, u3])
 
         # create four posts
         now = datetime.utcnow()
-        p1 = Post(content="luffy the pirate king", author=u1,
-                  timestamp=now + timedelta(seconds=1))
-        p2 = Post(content="Sabo finally consumes the flare flare fruit ",
-                  author=u1,
-                  timestamp=now + timedelta(seconds=4))
-        p3 = Post(content="Akainu must pay for killing ace :(",  author=u3,
-                  timestamp=now + timedelta(seconds=3))
-        p4 = Post(content="Zoro has gotten lost again. haha!!", author=u2,
-                  timestamp=now + timedelta(seconds=2))
+        p1 = Post(
+            content="luffy the pirate king",
+            author=u1,
+            timestamp=now + timedelta(seconds=1),
+        )
+        p2 = Post(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u1,
+            timestamp=now + timedelta(seconds=4),
+        )
+        p3 = Post(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            timestamp=now + timedelta(seconds=3),
+        )
+        p4 = Post(
+            content="Zoro has gotten lost again. haha!!",
+            author=u2,
+            timestamp=now + timedelta(seconds=2),
+        )
 
         db.session.add_all([p1, p2, p3, p4])
         db.session.commit()
@@ -309,23 +381,38 @@ class PostModelCase(unittest.TestCase):
 
     def test_like_posts(self):
         # create three users
-        u1 = User(username='luffy', first_name='Monkey', last_name='D.luffy',
-                  email='luffy@example.com')
-        u2 = User(username='sabo', email='sabo@example.com')
-        u3 = User(username='ace', email='ace@example.com')
+        u1 = User(
+            username="luffy",
+            first_name="Monkey",
+            last_name="D.luffy",
+            email="luffy@example.com",
+        )
+        u2 = User(username="sabo", email="sabo@example.com")
+        u3 = User(username="ace", email="ace@example.com")
         db.session.add_all([u1, u2])
 
         # create four posts
         now = datetime.utcnow()
-        p1 = Post(content="luffy the pirate king", author=u1,
-                  timestamp=now + timedelta(seconds=1))
-        p2 = Post(content="Sabo finally consumes the flare flare fruit ",
-                  author=u1,
-                  timestamp=now + timedelta(seconds=4))
-        p3 = Post(content="Akainu must pay for killing ace :(",  author=u3,
-                  timestamp=now + timedelta(seconds=3))
-        p4 = Post(content="Zoro has gotten lost again. haha!!", author=u2,
-                  timestamp=now + timedelta(seconds=2))
+        p1 = Post(
+            content="luffy the pirate king",
+            author=u1,
+            timestamp=now + timedelta(seconds=1),
+        )
+        p2 = Post(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u1,
+            timestamp=now + timedelta(seconds=4),
+        )
+        p3 = Post(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            timestamp=now + timedelta(seconds=3),
+        )
+        p4 = Post(
+            content="Zoro has gotten lost again. haha!!",
+            author=u2,
+            timestamp=now + timedelta(seconds=2),
+        )
 
         db.session.add_all([p1, p2, p3, p4])
         db.session.commit()
@@ -354,7 +441,7 @@ class PostModelCase(unittest.TestCase):
 # Test Comment model
 class CommentModelCase(unittest.TestCase):
     def setUp(self):
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://"
         db.create_all()
 
     def tearDown(self):
@@ -363,38 +450,64 @@ class CommentModelCase(unittest.TestCase):
 
     def test_post_comment(self):
         # create four users
-        u1 = User(username='luffy', email='luffy@example.com')
-        u2 = User(username='sabo', email='sabo@example.com')
-        u3 = User(username='ace', email='ace@example.com')
-        u4 = User(username='zoro', email='zoro@example.com')
+        u1 = User(username="luffy", email="luffy@example.com")
+        u2 = User(username="sabo", email="sabo@example.com")
+        u3 = User(username="ace", email="ace@example.com")
+        u4 = User(username="zoro", email="zoro@example.com")
         db.session.add_all([u1, u2, u3, u4])
 
         now = datetime.utcnow()
 
         # create four posts
-        p1 = Post(content="luffy the pirate king", author=u1,
-                  timestamp=now + timedelta(seconds=1))
-        p2 = Post(content="Sabo finally consumes the flare flare fruit ",
-                  author=u1,
-                  timestamp=now + timedelta(seconds=4))
-        p3 = Post(content="Akainu must pay for killing ace :(",  author=u3,
-                  timestamp=now + timedelta(seconds=3))
-        p4 = Post(content="Zoro has gotten lost again. haha!!", author=u2,
-                  timestamp=now + timedelta(seconds=2))
+        p1 = Post(
+            content="luffy the pirate king",
+            author=u1,
+            timestamp=now + timedelta(seconds=1),
+        )
+        p2 = Post(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u1,
+            timestamp=now + timedelta(seconds=4),
+        )
+        p3 = Post(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            timestamp=now + timedelta(seconds=3),
+        )
+        p4 = Post(
+            content="Zoro has gotten lost again. haha!!",
+            author=u2,
+            timestamp=now + timedelta(seconds=2),
+        )
 
         db.session.add_all([p1, p2, p3, p4])
         db.session.commit()
 
         # create comment on posts
-        c1 = Comment(content="luffy the pirate king", author=u1,
-                     timestamps=now + timedelta(seconds=1), post=p1)
-        c2 = Comment(content="Sabo finally consumes the flare flare fruit ",
-                     author=u2, post=p2,
-                     timestamps=now + timedelta(seconds=4))
-        c3 = Comment(content="Akainu must pay for killing ace :(",  author=u3,
-                     post=p3, timestamps=now + timedelta(seconds=3))
-        c4 = Comment(content="Zoro has gotten lost again. haha!!", author=u4,
-                     post=p4, timestamps=now + timedelta(seconds=2))
+        c1 = Comment(
+            content="luffy the pirate king",
+            author=u1,
+            timestamps=now + timedelta(seconds=1),
+            post=p1,
+        )
+        c2 = Comment(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u2,
+            post=p2,
+            timestamps=now + timedelta(seconds=4),
+        )
+        c3 = Comment(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            post=p3,
+            timestamps=now + timedelta(seconds=3),
+        )
+        c4 = Comment(
+            content="Zoro has gotten lost again. haha!!",
+            author=u4,
+            post=p4,
+            timestamps=now + timedelta(seconds=2),
+        )
 
         db.session.add_all([c1, c2, c3, c4])
         db.session.commit()
@@ -407,38 +520,64 @@ class CommentModelCase(unittest.TestCase):
 
     def test_like_comment(self):
         # create four users
-        u1 = User(username='luffy', email='luffy@example.com')
-        u2 = User(username='sabo', email='sabo@example.com')
-        u3 = User(username='ace', email='ace@example.com')
-        u4 = User(username='zoro', email='zoro@example.com')
+        u1 = User(username="luffy", email="luffy@example.com")
+        u2 = User(username="sabo", email="sabo@example.com")
+        u3 = User(username="ace", email="ace@example.com")
+        u4 = User(username="zoro", email="zoro@example.com")
         db.session.add_all([u1, u2, u3, u4])
 
         now = datetime.utcnow()
 
         # create four posts
-        p1 = Post(content="luffy the pirate king", author=u1,
-                  timestamp=now + timedelta(seconds=1))
-        p2 = Post(content="Sabo finally consumes the flare flare fruit ",
-                  author=u1,
-                  timestamp=now + timedelta(seconds=4))
-        p3 = Post(content="Akainu must pay for killing ace :(",  author=u3,
-                  timestamp=now + timedelta(seconds=3))
-        p4 = Post(content="Zoro has gotten lost again. haha!!", author=u2,
-                  timestamp=now + timedelta(seconds=2))
+        p1 = Post(
+            content="luffy the pirate king",
+            author=u1,
+            timestamp=now + timedelta(seconds=1),
+        )
+        p2 = Post(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u1,
+            timestamp=now + timedelta(seconds=4),
+        )
+        p3 = Post(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            timestamp=now + timedelta(seconds=3),
+        )
+        p4 = Post(
+            content="Zoro has gotten lost again. haha!!",
+            author=u2,
+            timestamp=now + timedelta(seconds=2),
+        )
 
         db.session.add_all([p1, p2, p3, p4])
         db.session.commit()
 
         # create comment on posts
-        c1 = Comment(content="luffy the pirate king", author=u1,
-                     timestamps=now + timedelta(seconds=1), post=p1)
-        c2 = Comment(content="Sabo finally consumes the flare flare fruit ",
-                     author=u2, post=p2,
-                     timestamps=now + timedelta(seconds=4))
-        c3 = Comment(content="Akainu must pay for killing ace :(",  author=u3,
-                     post=p3, timestamps=now + timedelta(seconds=3))
-        c4 = Comment(content="Zoro has gotten lost again. haha!!", author=u4,
-                     post=p4, timestamps=now + timedelta(seconds=2))
+        c1 = Comment(
+            content="luffy the pirate king",
+            author=u1,
+            timestamps=now + timedelta(seconds=1),
+            post=p1,
+        )
+        c2 = Comment(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u2,
+            post=p2,
+            timestamps=now + timedelta(seconds=4),
+        )
+        c3 = Comment(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            post=p3,
+            timestamps=now + timedelta(seconds=3),
+        )
+        c4 = Comment(
+            content="Zoro has gotten lost again. haha!!",
+            author=u4,
+            post=p4,
+            timestamps=now + timedelta(seconds=2),
+        )
 
         db.session.add_all([c1, c2, c3, c4])
         db.session.commit()
@@ -467,7 +606,7 @@ class CommentModelCase(unittest.TestCase):
 # Test Child comments model
 class ChildCommentModelCase(unittest.TestCase):
     def setUp(self):
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
+        app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite://"
         db.create_all()
 
     def tearDown(self):
@@ -476,54 +615,93 @@ class ChildCommentModelCase(unittest.TestCase):
 
     def test_post_child_comment(self):
         # create four users
-        u1 = User(username='luffy', email='luffy@example.com')
-        u2 = User(username='sabo', email='sabo@example.com')
-        u3 = User(username='ace', email='ace@example.com')
-        u4 = User(username='zoro', email='zoro@example.com')
+        u1 = User(username="luffy", email="luffy@example.com")
+        u2 = User(username="sabo", email="sabo@example.com")
+        u3 = User(username="ace", email="ace@example.com")
+        u4 = User(username="zoro", email="zoro@example.com")
         db.session.add_all([u1, u2, u3, u4])
 
         now = datetime.utcnow()
 
         # create four posts
-        p1 = Post(content="luffy the pirate king", author=u1,
-                  timestamp=now + timedelta(seconds=1))
-        p2 = Post(content="Sabo finally consumes the flare flare fruit ",
-                  author=u1,
-                  timestamp=now + timedelta(seconds=4))
-        p3 = Post(content="Akainu must pay for killing ace :(",  author=u3,
-                  timestamp=now + timedelta(seconds=3))
-        p4 = Post(content="Zoro has gotten lost again. haha!!", author=u2,
-                  timestamp=now + timedelta(seconds=2))
+        p1 = Post(
+            content="luffy the pirate king",
+            author=u1,
+            timestamp=now + timedelta(seconds=1),
+        )
+        p2 = Post(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u1,
+            timestamp=now + timedelta(seconds=4),
+        )
+        p3 = Post(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            timestamp=now + timedelta(seconds=3),
+        )
+        p4 = Post(
+            content="Zoro has gotten lost again. haha!!",
+            author=u2,
+            timestamp=now + timedelta(seconds=2),
+        )
 
         db.session.add_all([p1, p2, p3, p4])
         db.session.commit()
 
         # create comment on posts
-        c1 = Comment(content="luffy the pirate king", author=u1,
-                     timestamps=now + timedelta(seconds=1), post=p1)
-        c2 = Comment(content="Sabo finally consumes the flare flare fruit ",
-                     author=u2, post=p2,
-                     timestamps=now + timedelta(seconds=4))
-        c3 = Comment(content="Akainu must pay for killing ace :(",  author=u3,
-                     post=p3, timestamps=now + timedelta(seconds=3))
-        c4 = Comment(content="Zoro has gotten lost again. haha!!", author=u4,
-                     post=p4, timestamps=now + timedelta(seconds=2))
+        c1 = Comment(
+            content="luffy the pirate king",
+            author=u1,
+            timestamps=now + timedelta(seconds=1),
+            post=p1,
+        )
+        c2 = Comment(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u2,
+            post=p2,
+            timestamps=now + timedelta(seconds=4),
+        )
+        c3 = Comment(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            post=p3,
+            timestamps=now + timedelta(seconds=3),
+        )
+        c4 = Comment(
+            content="Zoro has gotten lost again. haha!!",
+            author=u4,
+            post=p4,
+            timestamps=now + timedelta(seconds=2),
+        )
 
         db.session.add_all([c1, c2, c3, c4])
         db.session.commit()
 
         # create comment under comments
-        cc1 = ChildComment(content="one piece is within reach", author=u1,
-                           timestamps=now + timedelta(seconds=1), comment=c1)
-        cc2 = ChildComment(content="Sabo finally consumes the flare flare fruit",
-                           author=u2, comment=c2,
-                           timestamps=now + timedelta(seconds=4))
-        cc3 = ChildComment(content="Akainu must pay for killing ace :(",
-                           author=u3,
-                           comment=c3, timestamps=now + timedelta(seconds=3))
-        cc4 = ChildComment(content="Zoro has gotten lost again. haha!!",
-                           author=u4,
-                           comment=c4, timestamps=now + timedelta(seconds=2))
+        cc1 = ChildComment(
+            content="one piece is within reach",
+            author=u1,
+            timestamps=now + timedelta(seconds=1),
+            comment=c1,
+        )
+        cc2 = ChildComment(
+            content="Sabo finally consumes the flare flare fruit",
+            author=u2,
+            comment=c2,
+            timestamps=now + timedelta(seconds=4),
+        )
+        cc3 = ChildComment(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            comment=c3,
+            timestamps=now + timedelta(seconds=3),
+        )
+        cc4 = ChildComment(
+            content="Zoro has gotten lost again. haha!!",
+            author=u4,
+            comment=c4,
+            timestamps=now + timedelta(seconds=2),
+        )
 
         # check the comments dropped by the users
         self.assertEqual(c1.comments.all(), [cc1])
@@ -533,54 +711,93 @@ class ChildCommentModelCase(unittest.TestCase):
 
     def test_like_child_comment(self):
         # create four users
-        u1 = User(username='luffy', email='luffy@example.com')
-        u2 = User(username='sabo', email='sabo@example.com')
-        u3 = User(username='ace', email='ace@example.com')
-        u4 = User(username='zoro', email='zoro@example.com')
+        u1 = User(username="luffy", email="luffy@example.com")
+        u2 = User(username="sabo", email="sabo@example.com")
+        u3 = User(username="ace", email="ace@example.com")
+        u4 = User(username="zoro", email="zoro@example.com")
         db.session.add_all([u1, u2, u3, u4])
 
         now = datetime.utcnow()
 
         # create four posts
-        p1 = Post(content="luffy the pirate king", author=u1,
-                  timestamp=now + timedelta(seconds=1))
-        p2 = Post(content="Sabo finally consumes the flare flare fruit ",
-                  author=u1,
-                  timestamp=now + timedelta(seconds=4))
-        p3 = Post(content="Akainu must pay for killing ace :(",  author=u3,
-                  timestamp=now + timedelta(seconds=3))
-        p4 = Post(content="Zoro has gotten lost again. haha!!", author=u2,
-                  timestamp=now + timedelta(seconds=2))
+        p1 = Post(
+            content="luffy the pirate king",
+            author=u1,
+            timestamp=now + timedelta(seconds=1),
+        )
+        p2 = Post(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u1,
+            timestamp=now + timedelta(seconds=4),
+        )
+        p3 = Post(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            timestamp=now + timedelta(seconds=3),
+        )
+        p4 = Post(
+            content="Zoro has gotten lost again. haha!!",
+            author=u2,
+            timestamp=now + timedelta(seconds=2),
+        )
 
         db.session.add_all([p1, p2, p3, p4])
         db.session.commit()
 
         # create comment on posts
-        c1 = Comment(content="luffy the pirate king", author=u1,
-                     timestamps=now + timedelta(seconds=1), post=p1)
-        c2 = Comment(content="Sabo finally consumes the flare flare fruit ",
-                     author=u2, post=p2,
-                     timestamps=now + timedelta(seconds=4))
-        c3 = Comment(content="Akainu must pay for killing ace :(",  author=u3,
-                     post=p3, timestamps=now + timedelta(seconds=3))
-        c4 = Comment(content="Zoro has gotten lost again. haha!!", author=u4,
-                     post=p4, timestamps=now + timedelta(seconds=2))
+        c1 = Comment(
+            content="luffy the pirate king",
+            author=u1,
+            timestamps=now + timedelta(seconds=1),
+            post=p1,
+        )
+        c2 = Comment(
+            content="Sabo finally consumes the flare flare fruit ",
+            author=u2,
+            post=p2,
+            timestamps=now + timedelta(seconds=4),
+        )
+        c3 = Comment(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            post=p3,
+            timestamps=now + timedelta(seconds=3),
+        )
+        c4 = Comment(
+            content="Zoro has gotten lost again. haha!!",
+            author=u4,
+            post=p4,
+            timestamps=now + timedelta(seconds=2),
+        )
 
         db.session.add_all([c1, c2, c3, c4])
         db.session.commit()
 
         # create comment under comments
-        cc1 = ChildComment(content="one piece is within reach", author=u1,
-                           timestamps=now + timedelta(seconds=1), comment=c1)
-        cc2 = ChildComment(content="Sabo finally consumes the flare flare fruit",
-                           author=u2, comment=c2,
-                           timestamps=now + timedelta(seconds=4))
-        cc3 = ChildComment(content="Akainu must pay for killing ace :(",
-                           author=u3,
-                           comment=c3, timestamps=now + timedelta(seconds=3))
-        cc4 = ChildComment(content="Zoro has gotten lost again. haha!!",
-                           author=u4,
-                           comment=c4, timestamps=now + timedelta(seconds=2))
+        cc1 = ChildComment(
+            content="one piece is within reach",
+            author=u1,
+            timestamps=now + timedelta(seconds=1),
+            comment=c1,
+        )
+        cc2 = ChildComment(
+            content="Sabo finally consumes the flare flare fruit",
+            author=u2,
+            comment=c2,
+            timestamps=now + timedelta(seconds=4),
+        )
+        cc3 = ChildComment(
+            content="Akainu must pay for killing ace :(",
+            author=u3,
+            comment=c3,
+            timestamps=now + timedelta(seconds=3),
+        )
+        cc4 = ChildComment(
+            content="Zoro has gotten lost again. haha!!",
+            author=u4,
+            comment=c4,
+            timestamps=now + timedelta(seconds=2),
+        )
 
         # like child comments
         cc1.like_child_comment(u1)
@@ -603,5 +820,5 @@ class ChildCommentModelCase(unittest.TestCase):
         self.assertEqual(cc4.likes.all(), [u2])
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main(verbosity=2)
