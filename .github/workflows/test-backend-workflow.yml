@@ -1,0 +1,59 @@
+name: Test Backend on Pull Request
+
+on:
+  pull_request:
+    branches: [main, staging]
+    paths:
+      - "services/backend/**"
+      - ".github/workflows/test-backend-workflow.yml"
+
+jobs:
+  linter:
+    name: Apply Ruff Linter to Backend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install Ruff
+        run: |
+          cd services/backend
+          python -m pip install --upgrade pip
+          pip install ruff
+          echo "Ruff Installed"
+      - name: Apply Ruff Linter
+        run: |
+          ruff check .
+          echo "Ruff Check Applied"
+          ruff fix .
+          echo "Ruff Fix Applied" 
+          ruff format .
+          echo "File formatting applied"
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "automated code fixes and formatting by ruff"
+  test:
+    needs: linter
+    name: Test with pytest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source code
+        uses: actions/checkout@v2
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: |
+          cd services/backend
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          echo "Dependencies Installed"
+
+      - name: Test with pytest
+        run: |
+          pytest
+          echo "Test Successful"
